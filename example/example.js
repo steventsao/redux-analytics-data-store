@@ -1,9 +1,18 @@
-import { createStore } from "redux";
-import * as b from "../src/index";
+import { createStore, applyMiddleware } from "redux";
+import createAnalyticsDataStore from "./index";
 
-let mainReducer = (state, action) => {
+let mainReducer = (state = { login: true }, action) => {
+  switch (action.type) {
+    case "ADD":
+      return state;
+    default:
+      return state;
+  }
   return Object.assign({}, state);
 };
-const store = createStore(mainReducer);
+const store = createStore(
+  mainReducer,
+  applyMiddleware(createAnalyticsDataStore)
+);
 
-console.log({ b }, " HI");
+store.dispatch({ type: "ADD" });

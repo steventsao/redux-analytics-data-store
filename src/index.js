@@ -1,7 +1,9 @@
-let createAnalyticsDataStore = function(...args) {
+let createAnalyticsDataStore = function(window, satellite) {
   return ({ dispatch, getState }) => next => action => {
+    window = window || {};
+    satellite = satellite || { track: function() {} };
     window.digitalData = getState();
-    console.log(window.digitalData);
+    satellite.track("allPages");
     return next(action);
   };
 };
