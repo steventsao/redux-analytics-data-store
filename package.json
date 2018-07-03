@@ -1,8 +1,8 @@
 {
   "name": "redux-analytics-data-store",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "redux middleware that emits to a data layer object",
-  "main": "index.js",
+  "main": "./src/index.js",
   "scripts": {
     "test": "test"
   },
