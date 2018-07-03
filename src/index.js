@@ -23,6 +23,4 @@ let createAnalyticsDataStore = function(window, satellite) {
   };
 };
 
-const analyticsDataStore = createAnalyticsDataStore();
-
-module.exports = analyticsDataStore;
+module.exports = createAnalyticsDataStore;
