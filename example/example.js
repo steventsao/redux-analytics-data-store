@@ -11,9 +11,18 @@ let mainReducer = (state = { login: true }, action) => {
   return Object.assign({}, state);
 };
 let exampleWindow = {};
+let mockSatellite = {
+  track: function(event) {
+    console.log(`${event} was fired`);
+  }
+};
 const store = createStore(
   mainReducer,
-  applyMiddleware(createAnalyticsDataStore(exampleWindow))
+  applyMiddleware(
+    createAnalyticsDataStore(exampleWindow, mockSatellite, {
+      events: { DELETE_TODO: "userAction" }
+    })
+  )
 );
 
 store.dispatch({ type: "ADD" });
@@ -22,4 +31,10 @@ console.log(exampleWindow, store.getState());
 
 store.dispatch({ type: "ADD" });
 console.log(exampleWindow, store.getState());
-// { digitalData: { login: true } } { login: true, todo: [ 'test' ] }
+// { digitalData: { login: true, todo: [ 'test' ] } } { login: true, todo: [ 'test' ] }
+// userAction was fired
+
+store.dispatch({ type: "DELETE_TODO" });
+console.log(exampleWindow, store.getState());
+// userAction was fired
+// { digitalData: { login: true, todo: [ 'test' ] } } { login: true, todo: [ 'test' ] }
