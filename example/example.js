@@ -1,5 +1,5 @@
 import { createStore, applyMiddleware } from "redux";
-import createAnalyticsDataStore from "./index";
+import { createAnalyticsDataStore } from "./index";
 
 let mainReducer = (state = { login: true }, action) => {
   switch (action.type) {

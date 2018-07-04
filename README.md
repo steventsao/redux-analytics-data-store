@@ -28,13 +28,22 @@ _satellite.track("allPages");
 ```
 
 ```javascript
-const store = createStore({}, applyMiddleware(reduxAnalyticsDataStore));
+store.dispatch({ type: "ADD" });
+console.log(exampleWindow, store.getState());
+// {} { login: true }
 
-store.dispatch(addTodo({ id: 1 });
+store.dispatch({ type: "ADD" });
+console.log(exampleWindow, store.getState());
+// { digitalData: { login: true, todo: [ 'test' ] } } { login: true, todo: [ 'test' ] }
+// userAction was fired
 
-console.log(window.digitalData); // { action: "added todo", id: 1 };
+store.dispatch({ type: "DELETE_TODO" });
+console.log(exampleWindow, store.getState());
+// userAction was fired
+// { digitalData: { login: true, todo: [ 'test' ] } } { login: true, todo: [ 'test' ] }
 ```
 
 ## References
 
-Deinition of [Data Layer](https://marketing.adobe.com/resources/help/en_US/sc/implement/ref-data-layer.html)
+- [Data Layer](https://marketing.adobe.com/resources/help/en_US/sc/implement/ref-data-layer.html)
+- [Google Tag Manager](https://github.com/snowplow/snowplow/wiki/Integrating-javascript-tags-with-Google-Tag-Manager#1.4)

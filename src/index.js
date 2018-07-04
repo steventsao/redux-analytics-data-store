@@ -18,13 +18,23 @@ let createAnalyticsDataStore = function(window, satellite, options) {
     window = window || {};
     satellite = satellite || { track: function() {} };
     window.digitalData = rejectBlacklistedKeys(getState(), blacklistedKeys);
-    if (options.events && options.events[action.type]) {
-      satellite.track(options.events[action.type]);
-    } else {
-      satellite.track(PAGE_EVENT);
-    }
+
+    const targetEvent =
+      options.events && options.events[action.type]
+        ? options.events[action.type]
+        : PAGE_EVENT;
+    satellite.track(targetEvent);
     return next(action);
   };
 };
 
-module.exports = createAnalyticsDataStore;
+let createDataLayerForGTM = function(window, options) {
+  return ({ dispatch, getState }) => next => action => {
+    window = window || {};
+    window.dataLayer = window.dataLayer || [];
+    let dataLayerPayload = getDataLayerPayload(action, options);
+    window.dataLayer.push(dataLayerPayload);
+  };
+};
+
+module.exports = { createAnalyticsDataStore, createDataLayerForGTM };
