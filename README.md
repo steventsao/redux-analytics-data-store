@@ -28,19 +28,23 @@ _satellite.track("allPages");
 ```
 
 ```javascript
-store.dispatch({ type: "ADD" });
-console.log(exampleWindow, store.getState());
-// {} { login: true }
+store.dispatch({ type: "LOGIN" });
+console.log({ window, appState: store.getState() });
+// allPages was fired
+// { window: { dataLayer: { isLoggedIn: true } },
+//   appState: { isLoggedIn: true } }
 
-store.dispatch({ type: "ADD" });
-console.log(exampleWindow, store.getState());
-// { digitalData: { login: true, todo: [ 'test' ] } } { login: true, todo: [ 'test' ] }
-// userAction was fired
+store.dispatch({ type: "ADD_TODO" });
+console.log({ window, appState: store.getState() });
+// allPages was fired
+// { window: { dataLayer: { isLoggedIn: true, todo: [Array] } },
+//   appState: { isLoggedIn: true, todo: [ 'test' ] } }
 
 store.dispatch({ type: "DELETE_TODO" });
-console.log(exampleWindow, store.getState());
+console.log({ window, appState: store.getState() });
 // userAction was fired
-// { digitalData: { login: true, todo: [ 'test' ] } } { login: true, todo: [ 'test' ] }
+// { window: { dataLayer: { isLoggedIn: true, todo: [] } },
+//   appState: { isLoggedIn: true, todo: [] } }
 ```
 
 ## References
