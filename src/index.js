@@ -28,10 +28,10 @@ let createAnalyticsDataStore = function(
     let result = next(action);
     if (Array.isArray(window.dataLayer)) {
       // Push the latest action to data layer
-      window.dataLayer.push(action);
+      window.dataLayer.push(result);
     } else {
       // Or update dataLayer with the computed app state
-      window.dataLayer = rejectBlacklistedKeys(result);
+      window.dataLayer = rejectBlacklistedKeys(getState());
     }
     satellite.track(targetEvent);
     return result;

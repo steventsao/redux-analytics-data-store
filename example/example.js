@@ -1,16 +1,21 @@
 import { createStore, applyMiddleware } from "redux";
 import { createAnalyticsDataStore } from "./index";
 
-let mainReducer = (state = { login: true }, action) => {
+let mainReducer = (state = {}, action) => {
   switch (action.type) {
-    case "ADD":
+    case "ADD_TODO":
       return Object.assign({}, state, { todo: ["test"] });
+    case "DELETE_TODO":
+      return Object.assign({}, state, { todo: [] });
+    case "LOGIN":
+      return Object.assign({}, state, { isLoggedIn: true });
+
     default:
       return state;
   }
   return Object.assign({}, state);
 };
-let exampleWindow = {};
+let window = {};
 let mockSatellite = {
   track: function(event) {
     console.log(`${event} was fired`);
@@ -19,22 +24,26 @@ let mockSatellite = {
 const store = createStore(
   mainReducer,
   applyMiddleware(
-    createAnalyticsDataStore(exampleWindow, mockSatellite, {
+    createAnalyticsDataStore(window, mockSatellite, {
       events: { DELETE_TODO: "userAction" }
     })
   )
 );
 
-store.dispatch({ type: "ADD" });
-console.log(exampleWindow, store.getState());
-// {} { login: true }
+store.dispatch({ type: "LOGIN" });
+console.log({ window, appState: store.getState() });
+// allPages was fired
+// { window: { dataLayer: { isLoggedIn: true } },
+//   appState: { isLoggedIn: true } }
 
-store.dispatch({ type: "ADD" });
-console.log(exampleWindow, store.getState());
-// { digitalData: { login: true, todo: [ 'test' ] } } { login: true, todo: [ 'test' ] }
-// userAction was fired
+store.dispatch({ type: "ADD_TODO" });
+console.log({ window, appState: store.getState() });
+// allPages was fired
+// { window: { dataLayer: { isLoggedIn: true, todo: [Array] } },
+//   appState: { isLoggedIn: true, todo: [ 'test' ] } }
 
 store.dispatch({ type: "DELETE_TODO" });
-console.log(exampleWindow, store.getState());
+console.log({ window, appState: store.getState() });
 // userAction was fired
-// { digitalData: { login: true, todo: [ 'test' ] } } { login: true, todo: [ 'test' ] }
+// { window: { dataLayer: { isLoggedIn: true, todo: [] } },
+//   appState: { isLoggedIn: true, todo: [] } }
