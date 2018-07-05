@@ -28,14 +28,16 @@ ie. SPAs that utilize AJAX have to simulate page load.
 ```javascript
 class MarketingPage {
   constructor(analytics) {
-    // The definition of a page load event vary. What if a load event should not fire if a server call fails?
+    // The definition of a page load event vary.
+    // What if a load event should not fire if a server call fails?
     analytics.eventTrack("loaded marketing page");
   }
 }
 
 class DiscountWidget {
   constructor(analytics, mediaQuery) {
-    // Using Angular Element, widgets can be embedded without an iframe, making this if condition fragile.
+    // Using Angular Element, widgets can be embedded without an iframe,
+    // making this if condition fragile.
     if (mediaQuery.isIframe) {
       analytics.eventTrack("loaded discount widget");
     }
