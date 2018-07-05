@@ -1,6 +1,12 @@
 const PAGE_EVENT = "allPages";
 
-let rejectBlacklistedKeys = function(state = {}, blacklistedKeys = {}) {
+let rejectBlacklistedKeys = function(
+  state = {},
+  blacklistedKeys = {
+    password: true,
+    isIncomeEligible: true
+  }
+) {
   let result = {};
   Object.keys(state).forEach(key => {
     if (blacklistedKeys[key] === undefined) {
@@ -9,22 +15,26 @@ let rejectBlacklistedKeys = function(state = {}, blacklistedKeys = {}) {
   });
   return state;
 };
-let blacklistedKeys = {
-  password: true,
-  isIncomeEligible: true
-};
-let createAnalyticsDataStore = function(window, satellite, options) {
+let createAnalyticsDataStore = function(
+  window = {},
+  satellite = { track: function() {} },
+  options
+) {
   return ({ dispatch, getState }) => next => action => {
-    window = window || {};
-    satellite = satellite || { track: function() {} };
-    window.digitalData = rejectBlacklistedKeys(getState(), blacklistedKeys);
-
     const targetEvent =
       options.events && options.events[action.type]
         ? options.events[action.type]
         : PAGE_EVENT;
+    let result = next(action);
+    if (Array.isArray(window.dataLayer)) {
+      // Push the latest action to data layer
+      window.dataLayer.push(action);
+    } else {
+      // Or update dataLayer with the computed app state
+      window.dataLayer = rejectBlacklistedKeys(result);
+    }
     satellite.track(targetEvent);
-    return next(action);
+    return result;
   };
 };
 

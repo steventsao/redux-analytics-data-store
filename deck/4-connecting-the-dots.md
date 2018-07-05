@@ -1,27 +1,49 @@
 ## Connecting the dots
 
-1.  Data layer is metadata about the user state that vendors ingests to power analytics.
-2.  Unidirectional data flow encourages application state to be encapsulated within a single store.
-3.  All mutation is described in actions before the reducers take them to compute the next application state
+Both a data layer and redux store are about describing application state.
+
+```javascript
+// Component -> Action -> Reducer -> Store -> Component -> ...
+```
 
 ### Can analytics be implemented as a middleware between reducers and store in Redux?
 
 ```javascript
-let mainReducer = (state = { login: true }, action) => {
-  switch (action.type) {
-    case "ADD":
-      return Object.assign({}, state, { todo: ["test"] });
-    default:
-      return state;
-  }
-  return Object.assign({}, state);
+// Component -> Action -> Reducer -> MIDDLEWARE -> Store -> Component -> ...
+
+// ie. Logger middleware
+const logger = store => next => action => {
+  console.log("dispatching", action);
+  let result = next(action);
+  console.log("next state", store.getState());
+  return result;
 };
-let exampleWindow = {};
-let mockSatellite = {
-  track: function(event) {
-    console.log(`${event} was fired`);
-  }
+```
+
+```javascript
+let createAnalyticsDataStore = function(
+  window = {},
+  satellite = { track: function() {} },
+  options
+) {
+  return ({ dispatch, getState }) => next => action => {
+    const targetEvent =
+      options.events && options.events[action.type]
+        ? options.events[action.type]
+        : PAGE_EVENT;
+    let result = next(action);
+    if (Array.isArray(window.dataLayer)) {
+      // Push the latest action to data layer
+      window.dataLayer.push(action);
+    } else {
+      // Or update dataLayer with the computed app state
+      window.dataLayer = rejectBlacklistedKeys(result);
+    }
+    satellite.track(targetEvent);
+    return result;
+  };
 };
+
 const store = createStore(
   mainReducer,
   applyMiddleware(

@@ -1,8 +1,13 @@
-## What is a data layer?
+## What is a [data layer](https://developers.google.com/tag-manager/devguide)?
 
-> A data layer (or data object) is a set of information that exists on the web page, hidden in the code, invisible to the human eye, but readable if you know where to look. It contains any data that you might need to pass to other systems or software.
+> A data layer (or data object) is that contains all of the information that you want to pass to a tag manager.
 
-OR:
+### What is a [tag manager](https://en.wikipedia.org/wiki/Google_Tag_Manager)?
+
+- Containers: Use it to contain all the other components using in the tags implementation.
+- Triggers: Define when to fire the tags.
+- Variables & constants: Collect specific information and pass onto data layer.
+- Data layers: A JavaScript object which keeps the information tags separate from other code. [6]
 
 ```javascript
 // It's just metadata
@@ -18,7 +23,7 @@ window.dataLayer = {
 ### What problem does it solve?
 
 1.  If VendorA wants event names to be formatted as `PageID + PAGENAME + PAGECATEGORY` and VendorB `pageName.pageId`, both vendors can derive their desired format by knowing the paths to get those values
-2.  Solves #2 in the previous slide.
+2.  Reduces maintenance in the frontend codebase to integrate a new partner
 
 ### How?
 

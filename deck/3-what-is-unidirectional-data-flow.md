@@ -2,55 +2,10 @@
 
 > All data in an application follows the same lifecycle pattern, making the logic of your app more predictable and easier to understand. It also encourages data normalization, so that you don't end up with multiple, independent copies of the same data that are unaware of one another.
 
-OR:
 
 ```javascript
 let reducer = (action, state) => nextState;
-```
 
-### It's conventional
-
-- Elm
-- Flux
-  ![](flux_graph.png)
-- Redux
-  ![](redux_diagram.png)
-- Angular
-- Mobx
-
-### Implied one-way data binding
-| description      | two-way                            | one-way      |
-| ---------------- | ---------------------------------- | ------------ |
-| mutation happens | in the view, controller, and model | in actions   |
-| source of truth  | in MVC                             | in the store |
-
-
-
-
-- In AngularJS and slide 1, the view changes when the state does, and vice versa. 
-- State can be changed by both the view and the controller and the service.
-
-
-```javascript
-// Action -> Reducer -> Store -> View -> Action -> ...
-```
-
-### Snippet from Redux
-```javascript
-import { createStore } from 'redux'
-​
-/**
- * This is a reducer, a pure function with (state, action) => state signature.
- * It describes how an action transforms the state into the next state.
- *
- * The shape of the state is up to you: it can be a primitive, an array, an object,
- * or even an Immutable.js data structure. The only important part is that you should
- * not mutate the state object, but return a new object if the state changes.
- *
- * In this example, we use a `switch` statement and strings, but you can use a helper that
- * follows a different convention (such as function maps) if it makes sense for your
- * project.
- */
 function counter(state = 0, action) {
   switch (action.type) {
   case 'INCREMENT':
@@ -61,7 +16,7 @@ function counter(state = 0, action) {
     return state
   }
 }
-​
+
 // Create a Redux store holding the state of your app.
 // Its API is { subscribe, dispatch, getState }.
 let store = createStore(counter)
@@ -82,4 +37,30 @@ store.dispatch({ type: 'INCREMENT' })
 // 2
 store.dispatch({ type: 'DECREMENT' })
 // 1
+```
+
+### It's conventional
+
+- Redux
+  ![](redux_diagram.png)
+- Flux
+  ![](flux_graph.png)
+- Angular
+- Elm
+- Mobx
+
+### Implied one-way data binding
+| description      | two-way                            | one-way      |
+| ---------------- | ---------------------------------- | ------------ |
+| mutation happens | in the view, controller, and model | in actions   |
+| source of truth  | in MVC                             | in the store |
+
+
+
+- In AngularJS and slide 1, the view changes when the state does, and vice versa. 
+- State can be changed by both the view and the controller and the service.
+
+
+```javascript
+// Action -> Reducer -> Store -> View -> Action -> ...
 ```

@@ -1,6 +1,6 @@
 ## Why is data collection difficult?
 
-1.  User interaction is complex. Developers should to remember to add tracking per possible interaction.
+1.  User interaction is complex. Developers are expected to track as many interactions as possible.
 
 ```javascript
 class VideoManager {
@@ -14,7 +14,7 @@ class VideoManager {
   }
   pause() {
     analytics.eventTrack("...", {
-      /*...*/
+      // ...
     });
   }
   fastForward() {
@@ -23,7 +23,27 @@ class VideoManager {
 }
 ```
 
-2.  The frontend is responsible for implementing for multiple vendors
+ie. SPAs that utilize AJAX have to simulate page load.
+
+```javascript
+class MarketingPage {
+  constructor(analytics) {
+    // The definition of a page load event vary. What if a load event should not fire if a server call fails?
+    analytics.eventTrack("loaded marketing page");
+  }
+}
+
+class DiscountWidget {
+  constructor(analytics, mediaQuery) {
+    // Using Angular Element, widgets can be embedded without an iframe, making this if condition fragile.
+    if (mediaQuery.isIframe) {
+      analytics.eventTrack("loaded discount widget");
+    }
+  }
+}
+```
+
+2.  The frontend is responsible for implementing for multiple vendors and their format
 
 ```javascript
 class Analytics {
@@ -46,21 +66,4 @@ class Analytics {
 }
 ```
 
-3.  Single Page Apps that utilize AJAX have to simulate page load. A page load event can vary depending on the context. ie. Page load event should only fire if a marketing widget is loaded on its own, but not when it is wrapped within a marketing page.
-
-```javascript
-class MarketingPage {
-  constructor(analytics) {
-    analytics.eventTrack("loaded marketing page");
-  }
-}
-
-class DiscountWidget {
-  constructor(analytics, mediaQuery) {
-    // Using Angular Element, widgets can be embedded without an iframe, making this if condition fragile.
-    if (mediaQuery.isIframe) {
-      analytics.eventTrack("loaded discount widget");
-    }
-  }
-}
-```
+Besides web analytics, the frontend also have to implement campaign analytics, audience measurement, personalization and A/B testing.
